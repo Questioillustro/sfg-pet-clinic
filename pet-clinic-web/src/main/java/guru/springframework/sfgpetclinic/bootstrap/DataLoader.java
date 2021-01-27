@@ -2,12 +2,14 @@ package guru.springframework.sfgpetclinic.bootstrap;
 
 import guru.springframework.sfgpetclinic.model.*;
 import guru.springframework.sfgpetclinic.services.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
 @Component
+@Slf4j
 public class DataLoader implements CommandLineRunner {
 
     private final OwnerService ownerService;
@@ -35,8 +37,8 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadData() {
-        PetType dog = new PetType();
-        dog.setName("Dog");
+        PetType dog = PetType.builder()
+                .name("Dog").build();
         dog = petTypeService.save(dog);
 
         PetType cat = new PetType();
@@ -80,7 +82,7 @@ public class DataLoader implements CommandLineRunner {
         catVisit.setDescription("Sneezy kitty");
         visitService.save(catVisit);
 
-        System.out.println("Bootstrapped owners...");
+        log.debug("Bootstrapped owners...");
 
         Specialty radiology = new Specialty();
         radiology.setDescription("Radiology");
@@ -108,6 +110,6 @@ public class DataLoader implements CommandLineRunner {
         vet2.getSpecialties().add(radiology);
         vetService.save(vet2);
 
-        System.out.println("Bootstrapped vets...");
+        log.debug("Bootstrapped vets...");
     }
 }
