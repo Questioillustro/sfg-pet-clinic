@@ -11,16 +11,28 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "pets")
 public class Pet extends BaseEntity {
+
+    @Builder
+    public Pet(Long id, PetType petType, Owner owner, LocalDate birthDate, String name, Set<Visit> visits) {
+        super(id);
+        this.petType = petType;
+        this.owner = owner;
+        this.birthDate = birthDate;
+        this.name = name;
+
+        if (visits != null) {
+            this.visits = visits;
+        }
+    }
 
     @ManyToOne
     @JoinColumn(name = "type_id")
     private PetType petType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id")
     private Owner owner;
 
@@ -32,4 +44,8 @@ public class Pet extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")
     private Set<Visit> visits = new HashSet<>();
+
+    public void addVisit(Visit visit) {
+        this.visits.add(visit);
+    }
 }
